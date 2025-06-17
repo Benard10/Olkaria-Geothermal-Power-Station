@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Olkaria Power Station Map</title>
+  <link rel="icon" href="assets/Olkaria_Logo.png" type="image/png" />
+  <link rel="shortcut icon" href="assets/Olkaria_Logo.png" type="image/png" />
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: 'Avenir Next', 'Helvetica Neue', sans-serif;
+      overflow: hidden;
+    }
+
+    /* Header logo & title */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      padding-left: 15px;
+    }
+
+    .logo-img {
+      height: 30px;
+      margin-right: 10px;
+      border-radius: 4px;
+    }
+
+    .header-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #769cbb;
+    }
+
+    /* Basemap style box */
+    #basemapStyles {
+      background-color: white;
+      border-radius: 6px;
+      padding: 10px;
+      width: 220px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+
+  <!-- Calcite Components -->
+  <script type="module" src="https://js.arcgis.com/calcite-components/3.0.3/calcite.esm.js"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/calcite-components/3.0.3/calcite.css" />
+
+  <!-- ArcGIS JS API CSS & Core -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.32/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.32/"></script>
+
+  <!-- ArcGIS Map Web Components -->
+  <script type="module" src="https://js.arcgis.com/map-components/4.32/arcgis-map-components.esm.js"></script>
+
+  <!-- Font Awesome for volcano icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+  <calcite-shell>
+    <!-- Header with logo -->
+    <calcite-navigation slot="header">
+      <div class="logo-container" slot="content-start">
+        <img src="assets/Olkaria_Logo.png" alt="Olkaria Logo" class="logo-img" />
+        <span class="header-title">Olkaria Geothermal Power Station</span>
+      </div>
+    </calcite-navigation>
+
+    <!-- Map -->
+    <arcgis-map id="olkariaMap" item-id="8ec92426f1c84f7ebc1c19456b79ae7b">
+      <arcgis-zoom position="top-left"></arcgis-zoom>
+      <div id="layerPanel" style="display: none;">
+        <arcgis-layer-list position="top-right"></arcgis-layer-list>
+      </div>
+      <div id="legendPanel" style="display: none;">
+        <arcgis-legend position="top-right"></arcgis-legend>
+      </div>
+
+      <!-- Basemap Style Panel -->
+      <arcgis-placement position="bottom-left">
+        <div id="basemapStyles">
+          <calcite-button
+            icon-start="information"
+            scale="s"
+            appearance="solid"
+            href="Geothermal_History.html"
+            target="_blank"
+            style="margin-bottom: 10px; width: 100%;">
+            Geothermal History
+          </calcite-button>
+          <calcite-label>
+            Basemap Style:
+            <calcite-combobox id="styleCombobox" selection-mode="single" clear-disabled>
+              <calcite-combobox-item value="arcgis/topographic" text-label="Topographic" selected></calcite-combobox-item>
+              <calcite-combobox-item value="arcgis/streets" text-label="Streets"></calcite-combobox-item>
+              <calcite-combobox-item value="arcgis/imagery" text-label="Imagery"></calcite-combobox-item>
+              <calcite-combobox-item value="arcgis/terrain" text-label="Terrain"></calcite-combobox-item>
+              <calcite-combobox-item value="arcgis/light-gray" text-label="Light Gray"></calcite-combobox-item>
+              <calcite-combobox-item value="arcgis/dark-gray" text-label="Dark Gray"></calcite-combobox-item>
+              <calcite-combobox-item value="arcgis/navigation" text-label="Navigation"></calcite-combobox-item>
+              <calcite-combobox-item value="arcgis/navigation-night" text-label="Night Navigation"></calcite-combobox-item>
+              <calcite-combobox-item value="arcgis/oceans" text-label="Oceans"></calcite-combobox-item>
+            </calcite-combobox>
+          </calcite-label>
+        </div>
+      </arcgis-placement>
+    </arcgis-map>
+
+    <!-- Footer -->
+    <calcite-footer slot="footer">
+      <span slot="footer-start">© 2025 Olkaria Energy Project: Benard Okello</span>
+    </calcite-footer>
+  </calcite-shell>
+
+  <!-- Logic for basemap switching -->
+  <script>
+    const mapComponent = document.getElementById("olkariaMap");
+    const comboBox = document.getElementById("styleCombobox");
+
+    comboBox.addEventListener("calciteComboboxChange", (event) => {
+      const selected = event.target.selectedItems[0];
+      if (selected) {
+        mapComponent.basemap = selected.value;
+      }
+    });
+  </script>
+  <script>
+    const layerPanel = document.getElementById("layerPanel");
+    const legendPanel = document.getElementById("legendPanel");
+    const toggleLayers = document.getElementById("toggleLayers");
+    const toggleLegend = document.getElementById("toggleLegend");
+
+  toggleLayers.addEventListener("click", () => {
+    const show = layerPanel.style.display === "none";
+    layerPanel.style.display = show ? "block" : "none";
+    legendPanel.style.display = "none";
+  });
+
+  toggleLegend.addEventListener("click", () => {
+    const show = legendPanel.style.display === "none";
+    legendPanel.style.display = show ? "block" : "none";
+    layerPanel.style.display = "none";
+  });
+</script>
+</body>
+
+</html>
